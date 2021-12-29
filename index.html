@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Photo Sphere Viewer Generator</title>
+        <script src="js/gen.js"></script>
+        <link rel="stylesheet" href="css/userconfig.css" />
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.7.1/cdn.min.js"
+            integrity="sha512-gJEPTYpQVWBbJrUDHGLwMaDXRtGRnAym+3egw7LDYzSzMEqSWSj64wW5JZxcgJFSLXSf93t5sE9shlQDZsbyAQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+            defer
+        ></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/three/build/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/uevent@2/browser.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4.4.1/dist/photo-sphere-viewer.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4/dist/photo-sphere-viewer.min.css"
+        />
+        <style>
+            #viewer {
+                width: 800px;
+                height: 600px;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="userConfigInputs" x-data="userConfig">
+            <div class="configGroup">
+                <h2>General settings</h2>
+
+                <label for="caption" class="textlabel">Image caption</label
+                ><br />
+                <input
+                    type="text"
+                    placeholder="image caption"
+                    id="caption"
+                    x-model="caption"
+                />
+
+                <br />
+
+                <input type="checkbox" id="help" x-model="help" />
+                <label for="help">Help</label>
+
+                <br />
+
+                <input type="checkbox" id="fullscreen" x-model="fullscreen" />
+                <label for="fullscreen">Fullscreen</label>
+
+                <br />
+
+                <input type="checkbox" id="move" x-model="move" />
+                <label for="move">Move</label>
+
+                <br />
+
+                <input type="checkbox" id="zoom" x-model="zoom" />
+                <label for="zoom">Zoom</label>
+
+                <br />
+
+                <input type="checkbox" id="zoomSlider" x-model="zoomSlider" />
+                <label for="zoomSlider">Zoom Slider</label>
+
+                <br />
+
+                <input type="checkbox" id="ctrlZoom" x-model="ctrlZoom" />
+                <label for="ctrlZoom">Ctrl to Zoom</label>
+
+                <br />
+
+                <input type="checkbox" id="fisheye" x-model="fisheye" />
+                <label for="fisheye">Fisheye</label>
+
+                <br />
+
+                <label for="maxFov" class="textlabel">Max FOV</label>
+                <input
+                    type="text"
+                    id="maxFov"
+                    class="shortText"
+                    x-model="maxFov"
+                />
+
+                <br />
+
+                <label for="minFov" class="textlabel">Min FOV</label>
+                <input
+                    type="text"
+                    id="minFov"
+                    class="shortText"
+                    x-model="minFov"
+                />
+            </div>
+
+            <div class="configGroup">
+                <h2>Auto rotate</h2>
+
+                <input
+                    type="checkbox"
+                    id="autoRot"
+                    x-model="automaticRotation"
+                />
+                <label for="autoRot">Automatic rotation</label>
+
+                <input
+                    type="checkbox"
+                    id="autoRotHide"
+                    x-model="automaticRotationHidden"
+                />
+                <label for="autoRotHide">hide</label>
+
+                <br />
+                <br />
+
+                <label for="autoRotLat" class="textlabel"
+                    >Rotation Lat
+                    <button @click="autoRotateCopyLat()">
+                        Copy current
+                    </button></label
+                ><br />
+                <input
+                    type="text"
+                    id="autoRotLat"
+                    class="shortText"
+                    x-model="autoRotateLat"
+                    x-bind:disabled="!automaticRotation"
+                />π<br />
+                (between -0.5π and 0.5π)
+
+                <br />
+                <br />
+
+                <label for="autoRotRPM" class="textlabel">Rotation speed</label
+                ><br />
+                <input
+                    type="text"
+                    id="autoRotRPM"
+                    class="shortText"
+                    x-model="autoRotateRPM"
+                    x-bind:disabled="!automaticRotation"
+                />rpm<br />
+                (Use negative number to rotate left.)
+
+                <br />
+                <br />
+
+                <label for="autoRotDelay" class="textlabel"
+                    >Rotation delay</label
+                ><br />
+                <input
+                    type="text"
+                    id="autoRotDelay"
+                    class="shortText"
+                    x-model="autoRotateDelay"
+                    x-bind:disabled="!automaticRotation"
+                />seconds<br />
+                (Delay after which automatic rotation starts.)
+            </div>
+
+            <div class="configGroup">
+                <h2>Starting position</h2>
+
+                <button class="textlabel" @click="startingPositionCopy()">
+                    Copy current position
+                </button>
+
+                <br />
+                <br />
+
+                <label for="startingLat" class="textlabel">Starting Lat</label
+                ><br />
+                <input
+                    type="text"
+                    id="startingLat"
+                    class="shortText"
+                    x-model="startingLat"
+                />π<br />
+                (between -0.5π and 0.5π)
+
+                <br />
+                <br />
+
+                <label for="startingLong" class="textlabel">Starting Long</label
+                ><br />
+                <input
+                    type="text"
+                    id="startingLong"
+                    class="shortText"
+                    x-model="startingLong"
+                />π<br />
+                (between 0 and 2π)
+
+                <br />
+                <br />
+
+                <label for="startingZoom" class="textlabel">Starting Zoom</label
+                ><br />
+                <input
+                    type="text"
+                    id="startingZoom"
+                    class="shortText"
+                    x-model="startingZoom"
+                />%<br />
+            </div>
+        </div>
+
+        <div class="output" x-data="viewerData">
+            <div class="imageRecompile">
+                <br />
+
+                Upload equirectangular image file<br />
+                <input type="file" onchange="uploadFile()" id="imageUpload" />
+
+                <br />
+                <br />
+
+                <button onclick="recompileViewer()">Recompile</button>
+
+                <div>
+                    <h2>Current data</h2>
+
+                    <p>Fov: <b x-text="currFov"></b></p>
+
+                    <p>Zoom: <b x-text="currZoomPercent"></b>%</p>
+
+                    <p>Lat: <b x-text="currLat"></b></p>
+
+                    <p>Long: <b x-text="currLong"></b></p>
+
+                    <br />
+
+                    <strong>HTML</strong><br />
+                    <textarea cols="40" rows="2">
+&lt;div id=&quot;viewer&quot; style=&quot;width: 800px; height: 600px&quot;&gt;&lt;/div&gt;</textarea
+                    ><br />
+                    <strong>Generated JS code</strong><br />
+                    <textarea
+                        cols="40"
+                        rows="10"
+                        x-text="getConfig()"
+                    ></textarea>
+                    <p>Replace "PATH/TO/IMAGE.JPG" with actual path.</p>
+
+                    <strong>Include</strong><br />
+                    <textarea cols="40" rows="5">
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/three/build/three.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/uevent@2/browser.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4.4.1/dist/photo-sphere-viewer.min.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4/dist/photo-sphere-viewer.min.css&quot;/&gt;
+                    </textarea>
+                </div>
+            </div>
+            <div id="viewer"></div>
+        </div>
+    </body>
+</html>

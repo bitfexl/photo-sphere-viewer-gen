@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+body {
+    font-family: "Roboto", sans-serif;
+}
+
+input[type="text"] {
+    margin: 4px;
+}
+
+input[type="text"].shortText {
+    width: 50px;
+}
+
+.textlabel {
+    margin-left: 5px;
+}
+
+.userConfigInputs h2 {
+    margin: 5px;
+}
+
+.userConfigInputs {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 5px;
+}
+
+.configGroup {
+    border: 1px solid lightgray;
+    padding: 5px;
+}
+
+.output {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 5px;
+}
